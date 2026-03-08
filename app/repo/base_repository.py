@@ -2,7 +2,10 @@ import uuid
 from typing import Optional, Sequence, Type, TypeVar, Generic
 
 from sqlalchemy import select, func
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.exception.custom_error import AlreadyExistsError
 
 T = TypeVar("T")
 
@@ -26,10 +29,16 @@ class BaseRepository(Generic[T]):
         return result.scalars().all()
 
     async def add(self, obj: T) -> T:
-        self.session.add(obj)
-        await self.session.commit()
-        await self.session.refresh(obj)
-        return obj
+        try:
+            self.session.add(obj)
+            await self.session.flush()
+            await self.session.refresh(obj)
+            return obj
+        except IntegrityError as e:
+            await self.session.rollback()
+            raise AlreadyExistsError(
+                f"Object with this unique field already exists"
+            ) from e
 
     async def commit(self):
         await self.session.commit()
@@ -40,13 +49,13 @@ class BaseRepository(Generic[T]):
     async def update(self, obj: T, data: dict) -> T:
         for field, value in data.items():
             setattr(obj, field, value)
-        await self.session.commit()
+        await self.session.flush()
         await self.session.refresh(obj)
         return obj
 
     async def delete(self, obj: T):
         await self.session.delete(obj)
-        await self.session.commit()
+        await self.session.flush()
 
     async def count_all(self, **filters) -> int:
         query = select(func.count()).select_from(self.model)

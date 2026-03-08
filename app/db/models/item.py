@@ -1,8 +1,12 @@
+from decimal import Decimal
+
+from sqlalchemy import Enum as SAEnum
 from sqlalchemy import String, Boolean, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy.sql.sqltypes import Integer
+from sqlalchemy.sql.sqltypes import Integer, Numeric
 
 from app.db.models.base import Base, IDMixin, TimestampMixin
+from app.db.models.enums import Currency
 
 
 class Item(Base, IDMixin, TimestampMixin):
@@ -12,6 +16,17 @@ class Item(Base, IDMixin, TimestampMixin):
     description: Mapped[str | None] = mapped_column(String(255), nullable=True)
     rating: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     visible: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+
+    price: Mapped[Decimal] = mapped_column(
+        Numeric(precision=10, scale=2),
+        nullable=False,
+        default=Decimal("0.00")
+    )
+    currency: Mapped[Currency] = mapped_column(
+        SAEnum(Currency, name="currency_enum"),
+        nullable=False,
+        default=Currency.UAH,
+    )
 
     company_id: Mapped[int] = mapped_column(ForeignKey("companies.id", ondelete="CASCADE"), nullable=False)
 
