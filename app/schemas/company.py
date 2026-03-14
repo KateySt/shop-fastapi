@@ -1,31 +1,33 @@
 from uuid import UUID
 
-from pydantic import BaseModel, Field, ConfigDict, TypeAdapter
+from pydantic import BaseModel, Field, ConfigDict
 
 from app.schemas import PaginatedResponse
 
 
 class CompanyBase(BaseModel):
-    id: UUID
     name: str = Field(..., min_length=3, max_length=100)
     description: str = Field(..., min_length=3, max_length=255)
     visible: bool
 
-    model_config = {"from_attributes": True}
-
-
-class CompanyCreate(BaseModel):
-    name: str = Field(..., min_length=3, max_length=100)
-    description: str = Field(..., min_length=3, max_length=255)
-    visible: bool
-
-
-class CompanyListResponse(PaginatedResponse[CompanyBase]):
     model_config = ConfigDict(from_attributes=True)
 
-    @classmethod
-    def from_orm_list(cls, companies, total: int) -> "CompanyListResponse":
-        return cls(
-            items=TypeAdapter(list[CompanyBase]).validate_python(companies, from_attributes=True),
-            total=total
-        )
+
+class CompanyCreate(CompanyBase):
+    pass
+
+
+class CompanyUpdate(BaseModel):
+    name: str | None = Field(None, min_length=3, max_length=100)
+    description: str | None = Field(None, min_length=3, max_length=255)
+    visible: bool | None = None
+
+
+class CompanyResponse(CompanyBase):
+    id: UUID
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class CompanyListResponse(PaginatedResponse[CompanyResponse]):
+    pass
