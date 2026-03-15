@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from uuid import UUID
 
+from app.dependencies import PaginationParams, SortingParams
 from app.schemas import (
     CompanyCreate,
     CompanyListResponse,
@@ -17,7 +18,11 @@ class AbstractCompanyService(ABC):
     async def get_company(self, company_id: UUID) -> CompanyResponse: ...
 
     @abstractmethod
-    async def list_companies(self, skip: int, limit: int) -> CompanyListResponse: ...
+    async def list_companies(
+        self,
+        pagination: PaginationParams,
+        sort: SortingParams,
+    ) -> CompanyListResponse: ...
 
     @abstractmethod
     async def update_company(

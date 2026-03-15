@@ -2,10 +2,11 @@ import uuid
 from collections.abc import Sequence
 from typing import Generic, TypeVar
 
-from sqlalchemy import func, select
+from sqlalchemy import asc, desc, func, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.db.models.enums import SortOrder
 from app.exception.custom_error import AlreadyExistsError
 
 T = TypeVar("T")
@@ -19,12 +20,25 @@ class BaseRepository(Generic[T]):
     async def get(self, obj_id: uuid.UUID) -> T | None:
         return await self.session.get(self.model, obj_id)
 
-    async def list(self, skip: int = 0, limit: int = 20, **filters) -> Sequence[T]:
+    async def list(
+        self,
+        skip: int,
+        limit: int,
+        order_by: str = "created_at",
+        order: SortOrder = SortOrder.desc,
+        **filters,
+    ) -> Sequence[T]:
         query = select(self.model)
 
         for field, value in filters.items():
             if value is not None:
                 query = query.where(getattr(self.model, field) == value)
+
+        column = getattr(self.model, order_by, None)
+        if column is not None:
+            query = query.order_by(
+                desc(column) if order == SortOrder.desc else asc(column)
+            )
 
         result = await self.session.execute(query.offset(skip).limit(limit))
         return result.scalars().all()

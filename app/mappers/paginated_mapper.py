@@ -1,7 +1,10 @@
 from collections.abc import Sequence
+from dataclasses import asdict
 from typing import Any, Generic, TypeVar
 
 from pydantic import BaseModel, TypeAdapter
+
+from app.dependencies import PaginationParams
 
 ORM_T = TypeVar("ORM_T")
 RESPONSE_T = TypeVar("RESPONSE_T", bound=BaseModel)
@@ -23,13 +26,7 @@ class PaginatedMapper(Generic[ORM_T, RESPONSE_T]):
         self,
         orm_list: Sequence[ORM_T],
         total: int,
-        skip: int = 0,
-        limit: int = 20,
+        pagination: PaginationParams,
     ) -> RESPONSE_T:
         items = self._adapter.validate_python(orm_list, from_attributes=True)
-        return self.response_class(
-            items=items,
-            total=total,
-            skip=skip,
-            limit=limit,
-        )
+        return self.response_class(items=items, total=total, **asdict(pagination))

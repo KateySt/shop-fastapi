@@ -1,5 +1,7 @@
+from dataclasses import asdict
 from uuid import UUID
 
+from app.dependencies import CompanyFilters, PaginationParams, SortingParams
 from app.mappers.item_mapper import ItemMapper, ItemPaginatedMapper
 from app.schemas.item import ItemCreate, ItemListResponse, ItemResponse, ItemUpdate
 from app.services.abstract.abstract_item_service import AbstractItemService
@@ -27,16 +29,17 @@ class ItemService(AbstractItemService):
 
     async def list_items(
         self,
-        skip: int = 0,
-        limit: int = 20,
-        company_id: UUID | None = None,
-        visible: bool | None = None,
+        pagination: PaginationParams,
+        sort: SortingParams,
+        filters: CompanyFilters,
     ) -> ItemListResponse:
         items, total = await self.impl.list_items(
-            skip=skip, limit=limit, company_id=company_id, visible=visible
+            pagination,
+            sort,
+            **asdict(filters),
         )
         return self.paginated_mapper.from_orm_list(
-            orm_list=items, total=total, skip=skip, limit=limit
+            orm_list=items, total=total, pagination=pagination
         )
 
     async def update_item(self, item_id: UUID, data: ItemUpdate) -> ItemResponse:

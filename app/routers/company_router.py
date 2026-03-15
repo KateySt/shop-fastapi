@@ -1,7 +1,8 @@
 import uuid
 
-from fastapi import APIRouter, Query, status
+from fastapi import APIRouter, status
 
+from app.dependencies import Pagination, Sorting
 from app.schemas import (
     CompanyCreate,
     CompanyListResponse,
@@ -26,10 +27,10 @@ async def get_company(company_id: uuid.UUID, company_service: CompanyServiceDep)
 @router.get("/", response_model=CompanyListResponse)
 async def list_companies(
     service: CompanyServiceDep,
-    skip: int = Query(0, ge=0),
-    limit: int = Query(20, ge=1, le=100),
+    pagination: Pagination,
+    sort: Sorting,
 ):
-    return await service.list_companies(skip=skip, limit=limit)
+    return await service.list_companies(pagination, sort)
 
 
 @router.patch("/{company_id}", response_model=CompanyResponse)

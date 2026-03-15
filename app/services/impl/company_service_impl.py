@@ -1,6 +1,8 @@
+from dataclasses import asdict
 from uuid import UUID
 
 from app.db.models import Company
+from app.dependencies import PaginationParams, SortingParams
 from app.exception import NotFoundError
 from app.repo import CompanyRepository
 
@@ -20,9 +22,11 @@ class CompanyServiceImpl:
         return company
 
     async def list_companies(
-        self, skip: int = 0, limit: int = 20
+        self,
+        pagination: PaginationParams,
+        sort: SortingParams,
     ) -> tuple[list[Company], int]:
-        companies = await self.repo.list(skip=skip, limit=limit)
+        companies = await self.repo.list(**asdict(pagination), **asdict(sort))
         total = await self.repo.count_all()
         return list(companies), total
 

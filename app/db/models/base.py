@@ -16,10 +16,10 @@ class Base(DeclarativeBase):
 
 
 class TimestampMixin:
-    created_date: Mapped[datetime] = mapped_column(
+    created_at: Mapped[datetime] = mapped_column(
         DateTime, default=datetime.now, nullable=False
     )
-    updated_date: Mapped[datetime] = mapped_column(
+    updated_at: Mapped[datetime] = mapped_column(
         DateTime, default=datetime.now, onupdate=datetime.now, nullable=False
     )
 

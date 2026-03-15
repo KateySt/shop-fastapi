@@ -1,5 +1,6 @@
 from uuid import UUID
 
+from app.dependencies import PaginationParams, SortingParams
 from app.mappers import CompanyMapper, CompanyPaginatedMapper
 from app.schemas import (
     CompanyCreate,
@@ -31,14 +32,13 @@ class CompanyService(AbstractCompanyService):
         return self.mapper.to_response(orm)
 
     async def list_companies(
-        self, skip: int = 0, limit: int = 20
+        self,
+        pagination: PaginationParams,
+        sort: SortingParams,
     ) -> CompanyListResponse:
-        companies, total = await self.impl.list_companies(skip, limit)
+        companies, total = await self.impl.list_companies(pagination, sort)
         return self.paginated_mapper.from_orm_list(
-            orm_list=companies,
-            total=total,
-            skip=skip,
-            limit=limit,
+            orm_list=companies, total=total, pagination=pagination
         )
 
     async def update_company(

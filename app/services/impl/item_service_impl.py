@@ -1,6 +1,8 @@
+from dataclasses import asdict
 from uuid import UUID
 
 from app.db.models.item import Item
+from app.dependencies import CompanyFilters, PaginationParams, SortingParams
 from app.exception import NotFoundError
 from app.repo.item_repository import ItemRepository
 
@@ -21,15 +23,14 @@ class ItemServiceImpl:
 
     async def list_items(
         self,
-        skip: int = 0,
-        limit: int = 20,
-        company_id: UUID | None = None,
-        visible: bool | None = None,
+        pagination: PaginationParams,
+        sort: SortingParams,
+        filters: CompanyFilters,
     ) -> tuple[list[Item], int]:
         items = await self.repo.list(
-            skip=skip, limit=limit, company_id=company_id, visible=visible
+            **asdict(pagination), **asdict(sort), **asdict(filters)
         )
-        total = await self.repo.count_all(company_id=company_id, visible=visible)
+        total = await self.repo.count_all(**asdict(filters))
         return list(items), total
 
     async def update_item(self, item_id: UUID, data: dict) -> Item:

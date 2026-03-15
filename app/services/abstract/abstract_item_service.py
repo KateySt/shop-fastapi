@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from uuid import UUID
 
+from app.dependencies import CompanyFilters, PaginationParams, SortingParams
 from app.schemas.item import ItemCreate, ItemListResponse, ItemResponse, ItemUpdate
 
 
@@ -15,10 +16,9 @@ class AbstractItemService(ABC):
     @abstractmethod
     async def list_items(
         self,
-        skip: int,
-        limit: int,
-        company_id: UUID | None,
-        visible: bool | None,
+        pagination: PaginationParams,
+        sort: SortingParams,
+        filters: CompanyFilters,
     ) -> ItemListResponse: ...
 
     @abstractmethod
