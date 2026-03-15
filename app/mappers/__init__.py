@@ -2,7 +2,7 @@ from functools import lru_cache
 
 from .base_mapper import BaseMapper
 from .company_mapper import CompanyMapper, CompanyPaginatedMapper
-from .item_mapper import ItemPaginatedMapper, ItemMapper
+from .item_mapper import ItemMapper, ItemPaginatedMapper
 from .paginated_mapper import PaginatedMapper
 
 

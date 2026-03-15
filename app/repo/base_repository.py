@@ -1,7 +1,8 @@
 import uuid
-from typing import Optional, Sequence, Type, TypeVar, Generic
+from collections.abc import Sequence
+from typing import Generic, TypeVar
 
-from sqlalchemy import select, func
+from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -11,11 +12,11 @@ T = TypeVar("T")
 
 
 class BaseRepository(Generic[T]):
-    def __init__(self, session: AsyncSession, model: Type[T]):
+    def __init__(self, session: AsyncSession, model: type[T]):
         self.session = session
         self.model = model
 
-    async def get(self, obj_id: uuid.UUID) -> Optional[T]:
+    async def get(self, obj_id: uuid.UUID) -> T | None:
         return await self.session.get(self.model, obj_id)
 
     async def list(self, skip: int = 0, limit: int = 20, **filters) -> Sequence[T]:
@@ -36,7 +37,7 @@ class BaseRepository(Generic[T]):
             return obj
         except IntegrityError as e:
             raise AlreadyExistsError(
-                f"Object with this unique field already exists"
+                "Object with this unique field already exists"
             ) from e
 
     async def update(self, obj: T, data: dict) -> T:

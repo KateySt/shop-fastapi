@@ -3,17 +3,10 @@ from typing import Any
 from app.db.models.item import Item
 from app.mappers.base_mapper import BaseMapper
 from app.mappers.paginated_mapper import PaginatedMapper
-from app.schemas.item import ItemCreate, ItemUpdate, ItemResponse, ItemListResponse
+from app.schemas.item import ItemCreate, ItemListResponse, ItemResponse, ItemUpdate
 
 
-class ItemMapper(
-    BaseMapper[
-        Item,
-        ItemCreate,
-        ItemUpdate,
-        ItemResponse
-    ]
-):
+class ItemMapper(BaseMapper[Item, ItemCreate, ItemUpdate, ItemResponse]):
     def __init__(self):
         super().__init__(
             orm_class=Item,

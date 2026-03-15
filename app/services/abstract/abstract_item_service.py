@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from uuid import UUID
 
-from app.schemas.item import ItemCreate, ItemUpdate, ItemResponse, ItemListResponse
+from app.schemas.item import ItemCreate, ItemListResponse, ItemResponse, ItemUpdate
 
 
 class AbstractItemService(ABC):
@@ -14,17 +14,15 @@ class AbstractItemService(ABC):
 
     @abstractmethod
     async def list_items(
-            self,
-            skip: int,
-            limit: int,
-            company_id: UUID | None,
-            visible: bool | None,
+        self,
+        skip: int,
+        limit: int,
+        company_id: UUID | None,
+        visible: bool | None,
     ) -> ItemListResponse: ...
 
     @abstractmethod
-    async def update_item(
-            self, item_id: UUID, data: ItemUpdate
-    ) -> ItemResponse: ...
+    async def update_item(self, item_id: UUID, data: ItemUpdate) -> ItemResponse: ...
 
     @abstractmethod
     async def delete_item(self, item_id: UUID) -> None: ...

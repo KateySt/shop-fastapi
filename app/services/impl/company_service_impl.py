@@ -19,7 +19,9 @@ class CompanyServiceImpl:
             raise NotFoundError("Company not found")
         return company
 
-    async def list_companies(self, skip: int = 0, limit: int = 20) -> tuple[list[Company], int]:
+    async def list_companies(
+        self, skip: int = 0, limit: int = 20
+    ) -> tuple[list[Company], int]:
         companies = await self.repo.list(skip=skip, limit=limit)
         total = await self.repo.count_all()
         return list(companies), total

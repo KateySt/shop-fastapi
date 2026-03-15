@@ -1,12 +1,18 @@
-from decimal import Decimal
+from __future__ import annotations
 
+from decimal import Decimal
+from typing import TYPE_CHECKING
+
+from sqlalchemy import Boolean, ForeignKey, String
 from sqlalchemy import Enum as SAEnum
-from sqlalchemy import String, Boolean, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql.sqltypes import Integer, Numeric
 
 from app.db.models.base import Base, IDMixin, TimestampMixin
 from app.db.models.enums import Currency
+
+if TYPE_CHECKING:
+    from app.db.models.company import Company
 
 
 class Item(Base, IDMixin, TimestampMixin):
@@ -18,9 +24,7 @@ class Item(Base, IDMixin, TimestampMixin):
     visible: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
 
     price: Mapped[Decimal] = mapped_column(
-        Numeric(precision=10, scale=2),
-        nullable=False,
-        default=Decimal("0.00")
+        Numeric(precision=10, scale=2), nullable=False, default=Decimal("0.00")
     )
     currency: Mapped[Currency] = mapped_column(
         SAEnum(Currency, name="currency_enum"),
@@ -28,6 +32,8 @@ class Item(Base, IDMixin, TimestampMixin):
         default=Currency.UAH,
     )
 
-    company_id: Mapped[int] = mapped_column(ForeignKey("companies.id", ondelete="CASCADE"), nullable=False)
+    company_id: Mapped[int] = mapped_column(
+        ForeignKey("companies.id", ondelete="CASCADE"), nullable=False
+    )
 
-    company: Mapped["Company"] = relationship("Company", back_populates="items")
+    company: Mapped[Company] = relationship("Company", back_populates="items")

@@ -20,19 +20,16 @@ class ItemServiceImpl:
         return item
 
     async def list_items(
-            self,
-            skip: int = 0,
-            limit: int = 20,
-            company_id: UUID | None = None,
-            visible: bool | None = None,
+        self,
+        skip: int = 0,
+        limit: int = 20,
+        company_id: UUID | None = None,
+        visible: bool | None = None,
     ) -> tuple[list[Item], int]:
         items = await self.repo.list(
-            skip=skip, limit=limit,
-            company_id=company_id, visible=visible
+            skip=skip, limit=limit, company_id=company_id, visible=visible
         )
-        total = await self.repo.count_all(
-            company_id=company_id, visible=visible
-        )
+        total = await self.repo.count_all(company_id=company_id, visible=visible)
         return list(items), total
 
     async def update_item(self, item_id: UUID, data: dict) -> Item:

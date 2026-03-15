@@ -1,2 +1,2 @@
-from .custom_error import ValidationError, NotFoundError
+from .custom_error import NotFoundError, ValidationError
 from .register_exception_handler import register_exception_handlers

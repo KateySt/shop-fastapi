@@ -4,18 +4,14 @@ from app.db.models import Company
 from app.mappers.base_mapper import BaseMapper
 from app.mappers.paginated_mapper import PaginatedMapper
 from app.schemas import (
-    CompanyCreate, CompanyUpdate, CompanyResponse, CompanyListResponse
+    CompanyCreate,
+    CompanyListResponse,
+    CompanyResponse,
+    CompanyUpdate,
 )
 
 
-class CompanyMapper(
-    BaseMapper[
-        Company,
-        CompanyCreate,
-        CompanyUpdate,
-        CompanyResponse
-    ]
-):
+class CompanyMapper(BaseMapper[Company, CompanyCreate, CompanyUpdate, CompanyResponse]):
     def __init__(self):
         super().__init__(
             orm_class=Company,

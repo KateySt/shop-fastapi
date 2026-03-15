@@ -41,3 +41,9 @@ clean:
 	find . -type d -name __pycache__ -exec rm -rf {} +
 	find . -type f -name "*.pyc" -delete
 	rm -rf .coverage htmlcov/
+
+pre-commit:
+	poetry run pre-commit run --all-files
+
+pre-commit-update:
+	poetry run pre-commit autoupdate
