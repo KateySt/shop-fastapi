@@ -11,7 +11,6 @@ class ItemServiceImpl:
 
     async def create_item(self, item: Item) -> Item:
         await self.repo.add(item)
-        await self.repo.commit()
         return item
 
     async def get_item(self, item_id: UUID) -> Item:
@@ -39,10 +38,8 @@ class ItemServiceImpl:
     async def update_item(self, item_id: UUID, data: dict) -> Item:
         item = await self.get_item(item_id)
         updated = await self.repo.update(item, data)
-        await self.repo.commit()
         return updated
 
     async def delete_item(self, item_id: UUID) -> None:
         item = await self.get_item(item_id)
         await self.repo.delete(item)
-        await self.repo.commit()

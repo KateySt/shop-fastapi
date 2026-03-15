@@ -11,7 +11,6 @@ class CompanyServiceImpl:
 
     async def create_company(self, company: Company) -> Company:
         company = await self.repo.add(company)
-        await self.repo.commit()
         return company
 
     async def get_company(self, company_id: UUID) -> Company:
@@ -28,10 +27,8 @@ class CompanyServiceImpl:
     async def update_company(self, company_id: UUID, data: dict) -> Company:
         company = await self.get_company(company_id)
         updated = await self.repo.update(company, data)
-        await self.repo.commit()
         return updated
 
     async def delete_company(self, company_id: UUID) -> None:
         company = await self.get_company(company_id)
         await self.repo.delete(company)
-        await self.repo.commit()

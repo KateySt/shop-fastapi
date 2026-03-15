@@ -35,16 +35,9 @@ class BaseRepository(Generic[T]):
             await self.session.refresh(obj)
             return obj
         except IntegrityError as e:
-            await self.session.rollback()
             raise AlreadyExistsError(
                 f"Object with this unique field already exists"
             ) from e
-
-    async def commit(self):
-        await self.session.commit()
-
-    async def flush(self):
-        await self.session.flush()
 
     async def update(self, obj: T, data: dict) -> T:
         for field, value in data.items():
