@@ -16,8 +16,6 @@ if TYPE_CHECKING:
 
 
 class Item(Base, IDMixin, TimestampMixin):
-    __tablename__ = "items"
-
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     description: Mapped[str | None] = mapped_column(String(255), nullable=True)
     rating: Mapped[int] = mapped_column(Integer, nullable=False, default=0)

@@ -3,10 +3,13 @@ from datetime import datetime
 
 from sqlalchemy import DateTime
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column
 
 
 class Base(DeclarativeBase):
+    @declared_attr.directive
+    def __tablename__(cls) -> str:  # noqa: N805
+        return cls.__name__.lower() + "s"
 
     def __repr__(self):
         cols = []

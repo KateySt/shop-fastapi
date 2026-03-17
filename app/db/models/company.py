@@ -12,8 +12,6 @@ if TYPE_CHECKING:
 
 
 class Company(Base, IDMixin, TimestampMixin):
-    __tablename__ = "companies"
-
     name: Mapped[str] = mapped_column(String(100), nullable=False, unique=True)
     description: Mapped[str | None] = mapped_column(String(255), nullable=True)
     visible: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
