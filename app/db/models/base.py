@@ -9,7 +9,12 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column
 class Base(DeclarativeBase):
     @declared_attr.directive
     def __tablename__(cls) -> str:  # noqa: N805
-        return cls.__name__.lower() + "s"
+        name = cls.__name__.lower()
+        if name.endswith("y"):
+            return name[:-1] + "ies"
+        if name.endswith(("s", "x", "z", "ch", "sh")):
+            return name + "es"
+        return name + "s"
 
     def __repr__(self):
         cols = []

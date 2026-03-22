@@ -4,6 +4,7 @@ from .base_mapper import BaseMapper
 from .company_mapper import CompanyMapper, CompanyPaginatedMapper
 from .item_mapper import ItemMapper, ItemPaginatedMapper
 from .paginated_mapper import PaginatedMapper
+from .user_mapper import UserMapper
 
 
 @lru_cache
@@ -24,3 +25,8 @@ def get_item_mapper() -> ItemMapper:
 @lru_cache
 def get_item_paginated_mapper() -> ItemPaginatedMapper:
     return ItemPaginatedMapper()
+
+
+@lru_cache
+def get_user_mapper() -> UserMapper:
+    return UserMapper()

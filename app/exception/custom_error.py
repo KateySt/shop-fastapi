@@ -23,3 +23,13 @@ class NotFoundError(CustomError):
 class AlreadyExistsError(CustomError):
     def __init__(self, detail: str):
         super().__init__(detail, status_code=status.HTTP_409_CONFLICT)
+
+
+class ForbiddenError(CustomError):
+    def __init__(self, detail: str):
+        super().__init__(detail, status_code=status.HTTP_403_FORBIDDEN)
+
+
+class UnauthorizedError(CustomError):
+    def __init__(self, detail: str):
+        super().__init__(detail, status_code=status.HTTP_401_UNAUTHORIZED)
