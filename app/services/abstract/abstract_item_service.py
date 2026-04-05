@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from uuid import UUID
 
+from fastapi import UploadFile
+
 from app.dependencies import CompanyFilters, PaginationParams, SortingParams
 from app.schemas.item import ItemCreate, ItemListResponse, ItemResponse, ItemUpdate
 
@@ -26,3 +28,9 @@ class AbstractItemService(ABC):
 
     @abstractmethod
     async def delete_item(self, item_id: UUID) -> None: ...
+
+    @abstractmethod
+    async def upload_image(self, item_id: UUID, file: UploadFile) -> ItemResponse: ...
+
+    @abstractmethod
+    async def delete_image(self, item_id: UUID, url_to_delete: str) -> ItemResponse: ...

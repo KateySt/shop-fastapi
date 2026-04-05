@@ -6,7 +6,14 @@ from .company import (
     CompanyResponse,
     CompanyUpdate,
 )
-from .item import ItemBase, ItemCreate, ItemListResponse, ItemResponse, ItemUpdate
+from .item import (
+    ItemBase,
+    ItemCreate,
+    ItemImagesResponse,
+    ItemListResponse,
+    ItemResponse,
+    ItemUpdate,
+)
 from .user import (
     CreateUserSchema,
     ForceLogoutSchema,

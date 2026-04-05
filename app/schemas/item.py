@@ -32,9 +32,14 @@ class ItemUpdate(BaseModel):
 
 class ItemResponse(ItemBase):
     id: UUID
+    images: list[str] = []
 
     model_config = ConfigDict(from_attributes=True)
 
 
 class ItemListResponse(PaginatedResponse[ItemResponse]):
     pass
+
+
+class ItemImagesResponse(BaseModel):
+    urls: list[str]

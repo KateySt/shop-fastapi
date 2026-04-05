@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy import Boolean, ForeignKey, String
 from sqlalchemy import Enum as SAEnum
+from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql.sqltypes import Integer, Numeric
 
@@ -29,6 +30,7 @@ class Item(Base, IDMixin, TimestampMixin):
         nullable=False,
         default=Currency.UAH,
     )
+    images: Mapped[list[str]] = mapped_column(ARRAY(String), default=list)
 
     company_id: Mapped[int] = mapped_column(
         ForeignKey("companies.id", ondelete="CASCADE"), nullable=False

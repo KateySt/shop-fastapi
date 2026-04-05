@@ -1,12 +1,15 @@
+from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, status
+from fastapi import APIRouter, Depends, File, UploadFile, status
 
 from app.dependencies import CompanyFiltersDep, Pagination, Sorting
+from app.dependencies.auth import get_current_user
+from app.dependencies.validation import validate_image
 from app.schemas.item import ItemCreate, ItemListResponse, ItemResponse, ItemUpdate
 from app.services import ItemServiceDep
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(get_current_user)])
 
 
 @router.post("/", response_model=ItemResponse, status_code=status.HTTP_201_CREATED)
@@ -50,3 +53,22 @@ async def delete_item(
     service: ItemServiceDep,
 ):
     await service.delete_item(item_id)
+
+
+@router.post("/{item_id}/images", response_model=ItemResponse)
+async def upload_item_image(
+    item_id: UUID,
+    service: ItemServiceDep,
+    file: Annotated[UploadFile, File(...)],
+):
+    validated = await validate_image(file)
+    return await service.upload_image(item_id, validated)
+
+
+@router.delete("/{item_id}/images", response_model=ItemResponse)
+async def delete_item_image(
+    item_id: UUID,
+    url: str,
+    service: ItemServiceDep,
+):
+    return await service.delete_image(item_id, url)

@@ -4,6 +4,7 @@ from .config import (
     db_config,
     log_config,
     redis_config,
+    s3_config,
     sentry_config,
 )
 from .logger import get_logger

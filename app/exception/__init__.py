@@ -1,5 +1,6 @@
 from .custom_error import (
     AlreadyExistsError,
+    BadRequestError,
     ForbiddenError,
     NotFoundError,
     UnauthorizedError,

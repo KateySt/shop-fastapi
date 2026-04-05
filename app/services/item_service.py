@@ -1,5 +1,6 @@
-from dataclasses import asdict
 from uuid import UUID
+
+from fastapi import UploadFile
 
 from app.dependencies import CompanyFilters, PaginationParams, SortingParams
 from app.mappers.item_mapper import ItemMapper, ItemPaginatedMapper
@@ -36,7 +37,7 @@ class ItemService(AbstractItemService):
         items, total = await self.impl.list_items(
             pagination,
             sort,
-            **asdict(filters),
+            filters,
         )
         return self.paginated_mapper.from_orm_list(
             orm_list=items, total=total, pagination=pagination
@@ -48,3 +49,11 @@ class ItemService(AbstractItemService):
 
     async def delete_item(self, item_id: UUID) -> None:
         await self.impl.delete_item(item_id)
+
+    async def upload_image(self, item_id: UUID, file: UploadFile) -> ItemResponse:
+        return self.mapper.to_response(await self.impl.upload_image(item_id, file))
+
+    async def delete_image(self, item_id: UUID, url_to_delete: str) -> ItemResponse:
+        return self.mapper.to_response(
+            await self.impl.delete_image(item_id, url_to_delete)
+        )

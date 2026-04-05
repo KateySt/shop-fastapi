@@ -72,6 +72,22 @@ class RedisConfig(BaseSettings):
     )
 
 
+class S3Config(BaseSettings):
+    S3_ENDPOINT: str
+    S3_ACCESS_KEY: str
+    S3_SECRET_KEY: str
+    S3_PUBLIC_URL: str
+    S3_REGION: str
+    S3_BUCKET: str
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="allow",
+    )
+
+
+s3_config = S3Config()
 app_config = AppConfig()
 db_config = DBConfig()
 log_config = LogConfig()

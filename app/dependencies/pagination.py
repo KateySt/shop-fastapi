@@ -7,3 +7,6 @@ from fastapi import Query
 class PaginationParams:
     skip: int = Query(0, ge=0)
     limit: int = Query(20, ge=1, le=100)
+
+    def to_dict(self) -> dict:
+        return {"skip": self.skip, "limit": self.limit}

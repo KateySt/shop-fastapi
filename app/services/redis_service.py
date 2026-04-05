@@ -14,7 +14,7 @@ class RedisService:
             username=redis_config.REDIS_USER,
             password=redis_config.REDIS_PASSWORD,
             db=redis_config.REDIS_DATABASE,
-            decode_responses=True,
+            decode_responses=False,
             max_connections=10,
         )
         self.redis = redis.Redis(connection_pool=self._pool)

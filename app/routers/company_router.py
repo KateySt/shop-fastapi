@@ -1,8 +1,11 @@
 import uuid
 
-from fastapi import APIRouter, status
+from fastapi import APIRouter, Depends, status
+from fastapi_cache import FastAPICache
+from fastapi_cache.decorator import cache
 
 from app.dependencies import Pagination, Sorting
+from app.dependencies.auth import get_current_user
 from app.schemas import (
     CompanyCreate,
     CompanyListResponse,
@@ -11,7 +14,7 @@ from app.schemas import (
 )
 from app.services import CompanyServiceDep
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(get_current_user)])
 
 
 @router.post("/", response_model=CompanyResponse, status_code=status.HTTP_201_CREATED)
@@ -20,6 +23,7 @@ async def create_company(company_data: CompanyCreate, service: CompanyServiceDep
 
 
 @router.get("/{company_id}", response_model=CompanyResponse)
+@cache(expire=300, namespace="companies")
 async def get_company(company_id: uuid.UUID, company_service: CompanyServiceDep):
     return await company_service.get_company(company_id)
 
@@ -39,7 +43,9 @@ async def update_company(
     company: CompanyUpdate,
     service: CompanyServiceDep,
 ):
-    return await service.update_company(company_id, company)
+    result = await service.update_company(company_id, company)
+    await FastAPICache.clear(namespace="companies")
+    return result
 
 
 @router.delete("/{company_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -48,3 +54,4 @@ async def delete_company(
     service: CompanyServiceDep,
 ):
     await service.delete_company(company_id)
+    await FastAPICache.clear(namespace="companies")

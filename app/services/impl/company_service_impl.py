@@ -1,4 +1,3 @@
-from dataclasses import asdict
 from uuid import UUID
 
 from app.db.models import Company
@@ -26,7 +25,7 @@ class CompanyServiceImpl:
         pagination: PaginationParams,
         sort: SortingParams,
     ) -> tuple[list[Company], int]:
-        companies = await self.repo.list(**asdict(pagination), **asdict(sort))
+        companies = await self.repo.list(**pagination.to_dict(), **sort.to_dict())
         total = await self.repo.count_all()
         return list(companies), total
 
