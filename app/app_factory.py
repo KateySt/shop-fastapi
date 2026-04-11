@@ -8,7 +8,13 @@ from starlette.middleware.cors import CORSMiddleware
 
 from app.config import app_config
 from app.exception import register_exception_handlers
-from app.routers import auth_router, company_router, item_router, user_router
+from app.routers import (
+    auth_router,
+    company_router,
+    item_router,
+    order_router,
+    user_router,
+)
 from app.services import init_sentry, redis_service
 
 init_sentry()
@@ -45,5 +51,6 @@ def get_application() -> FastAPI:
     app.include_router(item_router, prefix="/items", tags=["Items"])
     app.include_router(auth_router, prefix="/auth", tags=["Auth"])
     app.include_router(user_router, prefix="/users", tags=["Users"])
+    app.include_router(order_router, prefix="/orders", tags=["Orders"])
 
     return app

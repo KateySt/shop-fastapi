@@ -1,10 +1,16 @@
+from __future__ import annotations
+
 import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import ARRAY, String, text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.models import Base, IDMixin, TimestampMixin
 from app.db.models.enums import UserPermissionsEnum
+
+if TYPE_CHECKING:
+    pass
 
 
 class User(Base, IDMixin, TimestampMixin):
@@ -19,3 +25,5 @@ class User(Base, IDMixin, TimestampMixin):
         server_default=text("'{CAN_SELF_DELETE}'::text[]"),
     )
     use_token_since: Mapped[datetime.datetime] = mapped_column(nullable=True)
+
+    orders = relationship("Order", back_populates="user", lazy="selectin")
