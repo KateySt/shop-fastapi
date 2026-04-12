@@ -56,12 +56,3 @@ async def delete_order(
     user: User = Depends(get_current_user),
 ):
     await service.delete_order(order_id, user)
-
-
-@router.post("/{order_id}/close", response_model=OrderResponse)
-async def close_order(
-    order_id: UUID,
-    service: OrderServiceDep,
-    user: User = Depends(get_current_user),
-):
-    return await service.close_order(order_id, user)

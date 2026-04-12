@@ -6,5 +6,6 @@ from .config import (
     redis_config,
     s3_config,
     sentry_config,
+    stripe_config,
 )
 from .logger import get_logger

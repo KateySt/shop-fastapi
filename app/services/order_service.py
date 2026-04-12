@@ -44,6 +44,6 @@ class OrderService(AbstractOrderService):
     async def delete_order(self, order_id: UUID, user: User) -> None:
         await self.impl.delete_order(order_id, user.id)
 
-    async def close_order(self, order_id: UUID, user: User) -> OrderResponse:
-        orm = await self.impl.close_order(order_id, user.id)
+    async def close_order(self, order_id: UUID) -> OrderResponse:
+        orm = await self.impl.close_order(order_id)
         return self.mapper.to_response(orm)

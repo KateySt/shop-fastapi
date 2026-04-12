@@ -87,6 +87,19 @@ class S3Config(BaseSettings):
     )
 
 
+class StripeConfig(BaseSettings):
+    STRIPE_SECRET_KEY: str
+    STRIPE_PUBLISHABLE_KEY: str
+    STRIPE_WEBHOOK_SECRET: str
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="allow",
+    )
+
+
+stripe_config = StripeConfig()
 s3_config = S3Config()
 app_config = AppConfig()
 db_config = DBConfig()

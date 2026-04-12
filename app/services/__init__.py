@@ -32,14 +32,16 @@ from .abstract import (
     AbstractCompanyService,
     AbstractItemService,
     AbstractOrderService,
+    AbstractPaymentService,
     AbstractUserService,
 )
 from .company_service import CompanyService
-from .impl import OrderServiceImpl, UserServiceImpl
+from .impl import OrderServiceImpl, PaymentServiceImpl, UserServiceImpl
 from .impl.company_service_impl import CompanyServiceImpl
 from .impl.item_service_impl import ItemServiceImpl
 from .item_service import ItemService
 from .order_service import OrderService
+from .payment_service import PaymentService
 from .redis_service import RedisService
 from .sentry_service import init_sentry, unexpected_error
 from .user_service import UserService
@@ -98,6 +100,13 @@ def get_order_service(
     )
 
 
+def get_payment_service(
+    repo: Annotated[OrderRepository, Depends(get_repo_order)],
+) -> AbstractPaymentService:
+    return PaymentService(PaymentServiceImpl(repo))
+
+
+PaymentServiceDep = Annotated[PaymentService, Depends(get_payment_service)]
 UserServiceDep = Annotated[AbstractUserService, Depends(get_user_service)]
 CompanyServiceDep = Annotated[AbstractCompanyService, Depends(get_company_service)]
 ItemServiceDep = Annotated[AbstractItemService, Depends(get_item_service)]

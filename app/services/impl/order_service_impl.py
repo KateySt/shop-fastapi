@@ -95,8 +95,11 @@ class OrderServiceImpl:
 
         await self.repo.delete(order)
 
-    async def close_order(self, order_id: UUID, user_id: UUID) -> Order:
-        order = await self.get_order(order_id, user_id)
+    async def close_order(self, order_id: UUID) -> Order:
+        order = await self.repo.get_with_items(order_id)
+
+        if not order:
+            raise NotFoundError("Order not found")
 
         if order.is_closed:
             raise ForbiddenError("Order is already closed")

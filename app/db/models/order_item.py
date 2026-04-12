@@ -18,6 +18,7 @@ class OrderItem(Base, IDMixin, TimestampMixin):
     quantity: Mapped[int] = mapped_column(default=0)
 
     order = relationship("Order", back_populates="items", lazy="selectin")
+    item = relationship("Item", lazy="selectin")
 
     __table_args__ = (UniqueConstraint("order_id", "item_id", name="uq_order_item"),)
 

@@ -1,8 +1,8 @@
 """add orders models
 
-Revision ID: 6502db41acc5
+Revision ID: 1b9d1bee7fa4
 Revises: 565f166e7328
-Create Date: 2026-04-05 13:57:28.136140
+Create Date: 2026-04-12 15:15:45.591371
 
 """
 
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision: str = "6502db41acc5"
+revision: str = "1b9d1bee7fa4"
 down_revision: str | Sequence[str] | None = "565f166e7328"
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None

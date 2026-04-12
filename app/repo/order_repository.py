@@ -15,7 +15,12 @@ class OrderRepository(BaseRepository[Order]):
 
     async def get_with_items(self, order_id: UUID) -> Order | None:
         result = await self.session.execute(
-            select(Order).where(Order.id == order_id).options(selectinload(Order.items))
+            select(Order)
+            .where(Order.id == order_id)
+            .options(
+                selectinload(Order.items).selectinload(OrderItem.item),
+                selectinload(Order.user),
+            )
         )
         return result.scalar_one_or_none()
 
