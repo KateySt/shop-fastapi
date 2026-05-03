@@ -14,6 +14,7 @@ from .item import (
     ItemResponse,
     ItemUpdate,
 )
+from .message import HistoryResponseSchema, MessageResponseSchema, WSIncomingMessage
 from .payment import PaymentSessionRequest, PaymentUrlResponse
 from .user import (
     CreateUserSchema,

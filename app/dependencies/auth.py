@@ -1,13 +1,16 @@
 from collections.abc import Callable
 from enum import StrEnum
 
-from fastapi import Depends
+import jwt
+from fastapi import Depends, Query, WebSocket, WebSocketException, status
 from fastapi.security import OAuth2PasswordBearer
 
 from app.auth import AuthHandler, get_auth_handler
+from app.config import auth_config
 from app.db.models import User
 from app.exception import ForbiddenError, NotFoundError, UnauthorizedError
-from app.repo import UserRepository, get_repo_user
+from app.repo import get_repo_user
+from app.repo.user_repository import UserRepository
 
 
 class SecurityHandler:
@@ -51,3 +54,29 @@ def require_permissions(required_permissions: list[StrEnum]) -> Callable:
         )
 
     return dependency
+
+
+async def get_ws_user(
+    websocket: WebSocket,
+    token: str = Query(...),
+    user_repo: UserRepository = Depends(get_repo_user),
+) -> User:
+    try:
+        payload = jwt.decode(
+            token,
+            auth_config.JWT_SECRET,
+            algorithms=[auth_config.JWT_ALGORITHM],
+        )
+        user_id = payload.get("sub")
+        if not user_id:
+            raise WebSocketException(code=status.WS_1008_POLICY_VIOLATION)
+    except jwt.ExpiredSignatureError:
+        raise WebSocketException(code=status.WS_1008_POLICY_VIOLATION)
+    except jwt.InvalidTokenError:
+        raise WebSocketException(code=status.WS_1008_POLICY_VIOLATION)
+
+    user = await user_repo.get(user_id)
+    if not user:
+        raise WebSocketException(code=status.WS_1008_POLICY_VIOLATION)
+
+    return user

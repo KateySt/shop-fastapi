@@ -3,3 +3,4 @@ from .item_service_impl import ItemServiceImpl
 from .order_service_impl import OrderServiceImpl
 from .payment_service_impl import PaymentServiceImpl
 from .user_service_impl import UserServiceImpl
+from .ws_service_impl import WSServiceImpl

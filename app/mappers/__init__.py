@@ -3,6 +3,7 @@ from functools import lru_cache
 from .base_mapper import BaseMapper
 from .company_mapper import CompanyMapper, CompanyPaginatedMapper
 from .item_mapper import ItemMapper, ItemPaginatedMapper
+from .message_mapper import MessageMapper
 from .order_mapper import OrderMapper, OrderPaginatedMapper
 from .paginated_mapper import PaginatedMapper
 from .user_mapper import UserMapper
@@ -41,3 +42,8 @@ def get_order_mapper() -> OrderMapper:
 @lru_cache
 def get_order_paginated_mapper() -> OrderPaginatedMapper:
     return OrderPaginatedMapper()
+
+
+@lru_cache
+def get_message_mapper() -> MessageMapper:
+    return MessageMapper()

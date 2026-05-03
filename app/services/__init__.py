@@ -7,6 +7,7 @@ from ..mappers import (
     CompanyPaginatedMapper,
     ItemMapper,
     ItemPaginatedMapper,
+    MessageMapper,
     OrderMapper,
     OrderPaginatedMapper,
     UserMapper,
@@ -14,6 +15,7 @@ from ..mappers import (
     get_company_paginated_mapper,
     get_item_mapper,
     get_item_paginated_mapper,
+    get_message_mapper,
     get_order_mapper,
     get_order_paginated_mapper,
     get_user_mapper,
@@ -21,22 +23,26 @@ from ..mappers import (
 from ..repo import (
     CompanyRepository,
     ItemRepository,
+    MessageRepository,
     OrderRepository,
     UserRepository,
     get_repo_company,
     get_repo_item,
+    get_repo_message,
     get_repo_order,
     get_repo_user,
 )
+from ..websockets import manager
 from .abstract import (
     AbstractCompanyService,
     AbstractItemService,
     AbstractOrderService,
     AbstractPaymentService,
     AbstractUserService,
+    AbstractWSService,
 )
 from .company_service import CompanyService
-from .impl import OrderServiceImpl, PaymentServiceImpl, UserServiceImpl
+from .impl import OrderServiceImpl, PaymentServiceImpl, UserServiceImpl, WSServiceImpl
 from .impl.company_service_impl import CompanyServiceImpl
 from .impl.item_service_impl import ItemServiceImpl
 from .item_service import ItemService
@@ -45,6 +51,7 @@ from .payment_service import PaymentService
 from .redis_service import RedisService
 from .sentry_service import init_sentry, unexpected_error
 from .user_service import UserService
+from .web_socket_service import WSService
 
 
 def get_company_service(
@@ -106,6 +113,17 @@ def get_payment_service(
     return PaymentService(PaymentServiceImpl(repo))
 
 
+def get_ws_service(
+    repo: Annotated[MessageRepository, Depends(get_repo_message)],
+    mapper: Annotated[MessageMapper, Depends(get_message_mapper)],
+) -> AbstractWSService:
+    return WSService(
+        impl=WSServiceImpl(repo=repo, manager=manager),
+        mapper=mapper,
+    )
+
+
+WSServiceDep = Annotated[AbstractWSService, Depends(get_ws_service)]
 PaymentServiceDep = Annotated[PaymentService, Depends(get_payment_service)]
 UserServiceDep = Annotated[AbstractUserService, Depends(get_user_service)]
 CompanyServiceDep = Annotated[AbstractCompanyService, Depends(get_company_service)]

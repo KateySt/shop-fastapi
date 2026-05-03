@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ..db.database import get_db_session
 from .company_repository import CompanyRepository
 from .item_repository import ItemRepository
+from .message_repo import MessageRepository
 from .order_repository import OrderRepository
 from .user_repository import UserRepository
 
@@ -32,3 +33,9 @@ def get_repo_order(
     session: Annotated[AsyncSession, Depends(get_db_session)]
 ) -> OrderRepository:
     return OrderRepository(session)
+
+
+def get_repo_message(
+    session: Annotated[AsyncSession, Depends(get_db_session)]
+) -> MessageRepository:
+    return MessageRepository(session)

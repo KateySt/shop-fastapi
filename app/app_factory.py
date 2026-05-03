@@ -15,6 +15,7 @@ from app.routers import (
     order_router,
     payment_router,
     user_router,
+    ws_router,
 )
 from app.services import init_sentry, redis_service
 
@@ -54,5 +55,6 @@ def get_application() -> FastAPI:
     app.include_router(user_router, prefix="/users", tags=["Users"])
     app.include_router(order_router, prefix="/orders", tags=["Orders"])
     app.include_router(payment_router, prefix="/payments", tags=["Payments"])
+    app.include_router(ws_router, tags=["WebSockets"])
 
     return app

@@ -3,3 +3,4 @@ from app.services.abstract.abstract_item_service import AbstractItemService
 from app.services.abstract.abstract_order_service import AbstractOrderService
 from app.services.abstract.abstract_payment_service import AbstractPaymentService
 from app.services.abstract.abstract_user_service import AbstractUserService
+from app.services.abstract.abstract_ws_service import AbstractWSService
